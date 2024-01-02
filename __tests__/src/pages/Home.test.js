@@ -4,41 +4,31 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+import Home from "../../../src/pages/Home"; // Adjust the path based on your project structure
 
-// Import the component to be tested
-import Home from "../../../src/pages/Homes";
+// Mock framer-motion to avoid animation-related issues during testing
+jest.mock("framer-motion", () => ({
+  motion: ({ children, ...rest }) => <div {...rest}>{children}</div>,
+}));
 
-// Create a test suite for the Home component
 describe("Home Component", () => {
-  // Test case for rendering without crashing
-  test("renders without crashing", () => {
-    render(<Home />);
-    expect(screen.getByText("Dipesh Malvia")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "FullStack Developer and Youtube Teacher based in Poland"
-      )
-    ).toBeInTheDocument();
-  });
-
-  // Test case for animation presence
-  test("contains animated elements", () => {
+  test("renders Home component with animated name and description", () => {
     render(<Home />);
 
-    // Check for the presence of animated name and description
+    // Check if the animated name element is present
     const nameElement = screen.getByText("Dipesh Malvia");
+    expect(nameElement).toBeInTheDocument();
+
+    // Check if the animated description element is present
     const descElement = screen.getByText(
       "FullStack Developer and Youtube Teacher based in Poland"
     );
+    expect(descElement).toBeInTheDocument();
 
-    expect(nameElement).toHaveClass("motion.div");
-    expect(descElement).toHaveClass("motion.div");
+    // Check if the animated name and description have the correct class
+    expect(nameElement).toHaveClass("name");
+    expect(descElement).toHaveClass("desc");
 
-    // If you are also testing the animation properties, you may mock framer-motion or verify
-    // the properties in another way that makes sense for your testing setup
+    // You can add more assertions based on your component's features and behavior
   });
-
-  // Additional tests might include testing the animation properties,
-  // the behavior of the component when props are passed or state changes,
-  // and other specific interactions depending on the component's complexity and features.
 });
